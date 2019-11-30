@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<h1>{% block h1 %}{% endblock %}{{ title }}</h1>
+		{%block body%}{% endblock %}
+		
+		<br>
+
+		<a href="{{ url_for("home")  }}" >Home</a>
+	        <a href="{{ url_for("snake")  }}" >Snake</a>
+        	<a href="{{ url_for("login")  }}" >Login</a>
+	        <a href="{{ url_for("register")  }}" >Register</a>
+
+		<br>
+		
+		{% for item in data %}
+		<p>{{ item["name"] }}</p>
+		{% endfor %}
+	</body>
+</html>

@@ -1,0 +1,177 @@
+{% extends "layout.html" %}
+{% block body %}
+	<style>
+		table
+		{
+			table-layout: fixed;
+		}
+
+		td
+		{
+			width: 20em;
+			height: 20em;
+			padding: 0px;
+			margin: 0px;
+			font-size: 1px;
+			color: transparent;
+		}
+
+		tr,td
+		{
+			background-color: black;
+
+		}
+
+		.symbols
+		{
+			color: transparent;
+			font-size: 1px;
+			padding: 0px;
+			margin: 0px;
+		}
+	</style>
+
+	<script>
+		var finished = false;
+
+
+
+		//------------------------------------------------------------------------------
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() 
+		{
+			if (this.readyState == 4 && this.status == 200) 
+			{
+				if( xhttp.response != "finished" )
+				{
+					var snakeHead = document.getElementById("snakeHead").innerHTML;
+					var snakeTail = document.getElementById("snakeTail").innerHTML;
+					var fruit = document.getElementById("fruit").innerHTML;
+
+					var grid = [];
+					var hold = xhttp.response.substr(2);
+					hold = hold.substr(0, hold.length-3);
+					hold = hold.split("],[");
+					for( var i = 0; i < hold.length; i++ )
+					{
+						hold[i] = hold[i].replace(/["]+/g, "");
+						grid.push(hold[i].split(","));
+					}
+
+					for( var i = 0; i < grid.length; i++ )
+					{
+						for( var j = 0; j < grid[i].length; j++ )
+						{
+							document.getElementById("td-"+i+"-"+j).style["background-color"] = "black";
+							if( grid[i][j] == snakeHead || grid[i][j] == snakeTail )
+							{
+								document.getElementById("td-"+i+"-"+j).style["background-color"] = "red";
+							}
+							else if( grid[i][j] == fruit )
+							{
+								document.getElementById("td-"+i+"-"+j).style["background-color"] = "yellow";
+							}
+							document.getElementById("td-"+i+"-"+j).innerHTML = grid[i][j];
+						}
+					}
+				}
+				else
+				{
+					finished = true;
+				}
+			};
+		};		
+		var xhttp2 = new XMLHttpRequest();
+		xhttp2.onreadystatechange = function() 
+		{
+			if (this.readyState == 4 && this.status == 200) 
+			{
+				console.log(xhttp2.response);
+			};
+		};
+		//-------------------------------------------------------------------------------
+
+
+
+
+		function snakeGet() 
+		{
+			xhttp.open("POST", "{{ url_for('snakeGet') }}", true);
+			xhttp.send();
+		}
+
+		function snakePut(command) 
+                { 
+                        xhttp2.open("POST", "{{ url_for('snakePut') }}", true);
+			xhttp2.send(command);
+                }
+
+		function startLoop()
+		{
+			setTimeout( function()
+                        {
+				if( !finished )
+				{
+	                                snakeGet();
+					startLoop();
+				}
+                        }, 50)
+		}
+
+		function start()
+		{
+			finished = false;
+			snakePut("start");
+			startLoop();
+		}
+
+
+
+
+
+
+
+
+		window.onkeydown = function(event)
+		{
+			if( event.keyCode == 38 )
+			{
+				snakePut("0");
+			}
+			else if( event.keyCode == 40 )
+			{
+				snakePut("1");
+			}
+			else if( event.keyCode == 37 )
+                        {
+                                snakePut("2");
+                        }
+			else if( event.keyCode == 39 )
+                        {
+                                snakePut("3");
+                        };
+		}
+	</script>
+
+	<div class="directions">
+		<p class="symbols" id="snakeHead">{{ snakeHead }}</p>
+		<p class="symbols" id="snakeTail">{{ snakeTail }}</p>
+		<p class="symbols" id="fruit">{{ fruit }}</p>
+		<button type="submit" onclick="start()">start</button>
+		<button type="submit" onclick="snakePut('0')">Up</button>
+		<button type="submit" onclick="snakePut('1')">Down</button>
+		<button type="submit" onclick="snakePut('2')">Left</button>
+		<button type="submit" onclick="snakePut('3')">Right</button>
+		
+		<table>
+		{% for i in range(grid[1]) %}
+		<tr>
+				{% for j in range(grid[0]) %}
+				<td id="td-{{ i }}-{{ j }}"></td>
+				{% endfor %}
+			</tr>
+		{% endfor %}
+		</table>
+	</div>
+{%endblock%}
+

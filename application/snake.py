@@ -7,7 +7,7 @@ from time import sleep
 
 class Snake():
     gridLayout = []
-    snake = [[11,8],[11,9],[11,10],[11,11]] #snake starting length, last entry is placeholder
+    snake = [] #snake starting length, last entry is placeholder
     arenaX = 40
     arenaY = 20
 
@@ -52,7 +52,7 @@ class Snake():
                 if self.gridLayout[ self.snake[0][0] ][ self.snake[0][1] ] == self.fruitSymbol: #make snake longer when fruit eaten, and speed snake up
                     self.snake.append([0,0])
                     self.score[0] = self.score[0] + 1
-                    #snakeSpeed = snakeSpeed / 1.1
+                    self.snakeSpeed = self.snakeSpeed / 1.04
                     
                 if self.gridLayout[ self.snake[0][0] ][ self.snake[0][1] ] == self.snakeTailSymbol: #end game when snake head meets snake tail
                     self.runGame[0] = 1
@@ -131,6 +131,7 @@ class Snake():
         self.gridLayout = []
         self.direction[0] = 0
         self.score[0] = 0
+        self.snakeSpeed = 0.1
 
 
         for i in range(0, self.arenaY): #y

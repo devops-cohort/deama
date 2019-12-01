@@ -1,8 +1,11 @@
-from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, redirect, url_for, request, jsonify, session
 from application import app, db
 from application.forms import PostForm
 from application.models import Posts
-from application.snake import *
+from application.snake import Snake
+
+sessionID = 0
+gameSessions = {}
 
 
 @app.route("/")
@@ -12,29 +15,37 @@ def home():
 
 @app.route("/snakeGet", methods=["POST"])
 def snakeGet():
-    if runGame[0] == 1:
+    if gameSessions[session["ID"]].runGame[0] == 1:
         return "finished"
     else:
-        return jsonify(getGrid())
+        return jsonify( gameSessions[session["ID"]].getGrid() )
 
 @app.route("/snakePut", methods=["POST"])
 def snakePut():
     if request.data == b"0": #up
-        change(0)
+        gameSessions[session["ID"]].change(0)
     if request.data == b"1": #down
-        change(1)
+        gameSessions[session["ID"]].change(1)
     if request.data == b"2": #left
-        change(2)
+        gameSessions[session["ID"]].change(2)
     if request.data == b"3": #right
-        change(3)
+        gameSessions[session["ID"]].change(3)
     if request.data == b"start":
-        runGame[0] = 0
-        snakeStart()
+        gameSessions[session["ID"]].runGame[0] = 0
+        gameSessions[session["ID"]].snakeStart()
     return request.data
 
 @app.route("/snake", methods=["GET"])
 def snake():
-    return render_template( "snake.html", grid = [arenaX, arenaY], snakeHead = snakeHeadSymbol, snakeTail = snakeTailSymbol, fruit = fruitSymbol )
+    global sessionID
+    global gameSessions
+    session["ID"] = str(sessionID)
+    gameSessions[str(sessionID)] = Snake()
+    sessionID = sessionID + 1
+    #return gameSessions[session["ID"]].test()
+    return render_template( "snake.html", grid = [gameSessions[session["ID"]].arenaX, gameSessions[session["ID"]].arenaY], 
+            snakeHead = gameSessions[session["ID"]].snakeHeadSymbol, snakeTail = gameSessions[session["ID"]].snakeTailSymbol, 
+            fruit = gameSessions[session["ID"]].fruitSymbol )
 
 
 @app.route("/post", methods=["GET", "POST"])

@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
 	<style>
+		html, body
+		{
+			overflow: hidden;
+		}
+
 		table
 		{
 			table-layout: fixed;
@@ -28,6 +33,7 @@
 			font-size: 1px;
 			padding: 0px;
 			margin: 0px;
+			display: inline;
 		}
 	</style>
 
@@ -74,10 +80,12 @@
 							document.getElementById("td-"+i+"-"+j).innerHTML = grid[i][j];
 						}
 					}
+					snakeGetScore();
 				}
 				else
 				{
 					finished = true;
+					snakeGetScore();
 				}
 			};
 		};		
@@ -89,11 +97,24 @@
 				console.log(xhttp2.response);
 			};
 		};
+		var xhttp3 = new XMLHttpRequest();
+                xhttp3.onreadystatechange = function() 
+                {
+                        if (this.readyState == 4 && this.status == 200) 
+                        {
+                                document.getElementById("score").innerHTML = xhttp3.response;
+                        };
+                };
 		//-------------------------------------------------------------------------------
 
 
 
 
+		function snakeGetScore() 
+                {
+                        xhttp3.open("POST", "{{ url_for('snakeGetScore') }}", true);
+                        xhttp3.send();
+                }
 		function snakeGet() 
 		{
 			xhttp.open("POST", "{{ url_for('snakeGet') }}", true);
@@ -154,9 +175,13 @@
 	</script>
 
 	<div class="directions">
-		<p class="symbols" id="snakeHead">{{ snakeHead }}</p>
-		<p class="symbols" id="snakeTail">{{ snakeTail }}</p>
-		<p class="symbols" id="fruit">{{ fruit }}</p>
+		<span class="symbols" id="snakeHead">{{ snakeHead }}</span>
+		<span class="symbols" id="snakeTail">{{ snakeTail }}</span>
+		<span class="symbols" id="fruit">{{ fruit }}</span>
+		<span>Score: 
+			<span id="score"></span>
+			<br>
+		</span>
 		<button type="submit" onclick="start()">start</button>
 		<button type="submit" onclick="snakePut('0')">Up</button>
 		<button type="submit" onclick="snakePut('1')">Down</button>

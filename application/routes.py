@@ -11,8 +11,13 @@ color = "grey"
 
 @app.route("/")
 def home():
-    return render_template("home.html", title="THING")
+    return render_template("home.html", title="Snake game online")
 
+
+
+@app.route("/snakeGetScore", methods=["POST"])
+def snakeGetScore():
+    return jsonify( gameSessions[session["ID"]].getScore() )
 
 @app.route("/snakeGet", methods=["POST"])
 def snakeGet():

@@ -101,8 +101,8 @@ class Snake():
 
             
     #Functions--------------------------------------------------------------
-    def test(self):
-        return "123"
+    def getScore(self):
+        return self.score[0]
 
     def getGrid(self):
         return self.gridLayout

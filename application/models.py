@@ -18,7 +18,6 @@ class Posts(db.Model):
 class Player(db.Model):
     player_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
-    scores = db.relationship("Scores", backref="player", lazy=True)
 
     def __repr__(self):
         return "".join([

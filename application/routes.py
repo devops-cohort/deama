@@ -1,11 +1,12 @@
 from flask import render_template, redirect, url_for, request, jsonify, session
-from application import app, db
-from application.forms import PostForm
-from application.models import Posts
+from application import app, db, bcrypt
+from application.forms import PostForm, RegistrationForm
+from application.models import Posts, Account_details, Scores, Player
 from application.snake import Snake
 
 sessionID = 0
 gameSessions = {}
+color = "grey"
 
 
 @app.route("/")
@@ -45,10 +46,10 @@ def snake():
     #return gameSessions[session["ID"]].test()
     return render_template( "snake.html", grid = [gameSessions[session["ID"]].arenaX, gameSessions[session["ID"]].arenaY], 
             snakeHead = gameSessions[session["ID"]].snakeHeadSymbol, snakeTail = gameSessions[session["ID"]].snakeTailSymbol, 
-            fruit = gameSessions[session["ID"]].fruitSymbol )
+            fruit = gameSessions[session["ID"]].fruitSymbol, color = color )
 
 
-@app.route("/post", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     form = PostForm()
     if form.validate_on_submit():
@@ -65,6 +66,21 @@ def login():
         print(form.errors)
         return render_template("post.html", title="Form:", form=form)
 
-@app.route("/register")
+@app.route("/register", methods=["GET","POST"])
 def register():
-    return render_template("register.html", title="Register:")
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_pw = bcrypt.generate_password_hash( form.password.data )
+        print( bcrypt.check_password_hash(hashed_pw, "thing") )
+
+        player = Player(name=form.login.data)
+        db.session.add(player)
+
+        player_id = Player.query.filter_by( name=form.login.data ).first().player_id
+
+        account = Account_details( player_id = player_id, login=form.login.data, password=hashed_pw )
+
+        db.session.add(account)
+        db.session.commit()
+        return redirect( url_for("snake") )
+    return render_template("register.html", title="", form=form)

@@ -1,6 +1,37 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
+from application.models import Account_details
+
+
+class RegistrationForm(FlaskForm):
+    login = StringField("login",
+        validators=[
+                DataRequired()
+            ]
+        )
+
+    password = PasswordField("password",
+        validators=[
+                DataRequired()
+            ]
+        )
+
+    confirm_password = PasswordField("Confirm Password",
+        validators=[
+                DataRequired(),
+                EqualTo("password")
+            ]
+        )
+
+    submit = SubmitField("Sign up")
+    
+    def validate_login(self, login):
+        user = Account_details.query.filter_by(login = login.data).first()
+
+        if user:
+            raise ValidationError("Login already in database.")
+
 
 class PostForm(FlaskForm):
     first_name = StringField("First Name",

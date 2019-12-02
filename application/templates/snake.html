@@ -18,7 +18,7 @@
 
 		tr,td
 		{
-			background-color: black;
+			background-color: {{ color }};
 
 		}
 
@@ -62,7 +62,7 @@
 					{
 						for( var j = 0; j < grid[i].length; j++ )
 						{
-							document.getElementById("td-"+i+"-"+j).style["background-color"] = "black";
+							document.getElementById("td-"+i+"-"+j).style["background-color"] = "{{ color }}";
 							if( grid[i][j] == snakeHead || grid[i][j] == snakeTail )
 							{
 								document.getElementById("td-"+i+"-"+j).style["background-color"] = "red";

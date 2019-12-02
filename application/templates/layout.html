@@ -4,7 +4,6 @@
 	</head>
 	<body>
 		<h1>{% block h1 %}{% endblock %}{{ title }}</h1>
-		{%block body%}{% endblock %}
 		
 		<br>
 
@@ -13,6 +12,8 @@
         	<a href="{{ url_for("login")  }}" >Login</a>
 	        <a href="{{ url_for("register")  }}" >Register</a>
 
+		<br>
+		{%block body%}{% endblock %}
 		<br>
 		
 		{% for item in data %}

@@ -1,2 +1,47 @@
 {% extends "layout.html" %}
-{% block h1 %}TESTTTTT{% endblock %}
+{% block body %}
+<h1>Register Page</h1>
+
+<div class="form">
+	<form method="POST" action="">
+		{{ form.hidden_tag() }}
+		{% if form.login.errors %}
+			{{ form.login }}
+			<div class ="error">
+				{% for error in form.login.errors %}
+					<span>{{ error }} </span>
+				{% endfor %}
+			</div>
+		{% else %}
+			{{ form.login }}
+		{% endif %}
+		<br>
+		
+                {% if form.password.errors %}
+                        {{ form.password }}
+                        <div class ="error">
+                                {% for error in form.password.errors %}
+                                        <span>{{ error }} </span>
+                                {% endfor %}
+                        </div>
+                {% else %}
+                        {{ form.password }}
+                {% endif %}
+                <br>
+
+                {% if form.confirm_password.errors %}
+                        {{ form.confirm_password }}
+                        <div class ="error">
+                                {% for error in form.confirm_password.errors %}
+                                        <span>{{ error }} </span>
+                                {% endfor %}
+                        </div>
+                {% else %}
+                        {{ form.confirm_password }}
+                {% endif %}
+                <br>
+
+		{{ form.submit }}
+	</form>
+</div>
+{% endblock %}

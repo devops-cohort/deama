@@ -4,12 +4,11 @@
 	</head>
 	<body>
 		<h1>{% block h1 %}{% endblock %}{{ title }}</h1>
-		
-		<br>
 
 		<a href="{{ url_for("home")  }}" >Home</a>
 	        <a href="{{ url_for("snake")  }}" >Snake</a>
         	<a href="{{ url_for("login")  }}" >Login</a>
+		<a href="{{ url_for("logout")  }}" >Logout</a>
 	        <a href="{{ url_for("register")  }}" >Register</a>
 
 		<br>

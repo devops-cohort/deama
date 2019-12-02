@@ -1,4 +1,5 @@
-from application import db
+from application import db, login_manager
+from flask_login import UserMixin
 
 ######################################################################
 class Posts(db.Model):
@@ -15,6 +16,11 @@ class Posts(db.Model):
             ])
 ######################################################################
 
+#login_manager.init_app(app)
+@login_manager.user_loader
+def load_user(login_id):
+    return Account_details.query.get(int(login_id))
+
 class Player(db.Model):
     player_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
@@ -25,11 +31,13 @@ class Player(db.Model):
             ])
 
 
-class Account_details(db.Model):
+class Account_details(db.Model, UserMixin):
     login_id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, db.ForeignKey("player.player_id"))
     login = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+
+    id = login_id
 
     def __repf__(self):
         return "".join([

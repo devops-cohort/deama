@@ -1,8 +1,9 @@
 from flask import render_template, redirect, url_for, request, jsonify, session
-from application import app, db, bcrypt
-from application.forms import PostForm, RegistrationForm
+from application import app, db, bcrypt, login_manager
+from application.forms import PostForm, RegistrationForm, LoginForm
 from application.models import Posts, Account_details, Scores, Player
 from application.snake import Snake
+from flask_login import login_user, current_user, logout_user, login_required
 
 sessionID = 0
 gameSessions = {}
@@ -54,29 +55,39 @@ def snake():
             fruit = gameSessions[session["ID"]].fruitSymbol, color = color )
 
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+
+
+
+
+@app.route("/login", methods=["GET","POST"])
 def login():
-    form = PostForm()
+    if current_user.is_authenticated:
+        return redirect(url_for("snake"))
+
+    form = LoginForm()
     if form.validate_on_submit():
-        postData = Posts(
-                first_name = form.first_name.data,
-                last_name = form.last_name.data,
-                title = form.title.data,
-                content = form.content.data
-                )
-        db.session.add(postData)
-        db.session.commit()
-        return redirect(url_for("home"))
-    else:
-        print(form.errors)
-        return render_template("post.html", title="Form:", form=form)
+        user = Account_details.query.filter_by( login=form.login.data ).first()
+
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get("next")
+
+            if next_page:
+                return redirect(next_page)
+            else:
+                return redirect(url_for("snake"))
+
+    return render_template("login.html", title="Login:", form=form)
 
 @app.route("/register", methods=["GET","POST"])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_pw = bcrypt.generate_password_hash( form.password.data )
-        print( bcrypt.check_password_hash(hashed_pw, "thing") )
 
         player = Player(name=form.login.data)
         db.session.add(player)

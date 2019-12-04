@@ -13,8 +13,8 @@ class Snake():
 
     #lower = faster
     refresh = 0.05
-    snakeSpeed = 0.1
-    fruitSpawnTime = 3
+    snakeSpeed = 0
+    fruitSpawnTime = 0
 
     gridSymbol = "#"
     fruitSymbol = "@"
@@ -26,13 +26,16 @@ class Snake():
     score = [0]
     runGame = [0] #0 = run, 1 = stop
 
+    thread1 = None
+    thread2 = None
 
 
 
 
 
 
-    #Threads----------------------------------------------------------------e
+
+#Threads----------------------------------------------------------------
     def snakeMovement(self): #thread
         try:
             storeOld = [0,0]
@@ -93,14 +96,14 @@ class Snake():
             time.sleep(self.fruitSpawnTime)
         return
 
-    #Threads END------------------------------------------------------------
+#Threads END------------------------------------------------------------
 
 
 
 
 
             
-    #Functions--------------------------------------------------------------
+#Functions--------------------------------------------------------------
     def getScore(self):
         return self.score[0]
 
@@ -132,6 +135,7 @@ class Snake():
         self.direction[0] = 0
         self.score[0] = 0
         self.snakeSpeed = 0.1
+        self.fruitSpawnTime = 3
 
 
         for i in range(0, self.arenaY): #y
@@ -139,11 +143,12 @@ class Snake():
             for p in range(0, self.arenaX): #X
                 self.gridLayout[i].append(self.gridSymbol)
 
-        thread1 = Timer( self.refresh*5, self.snakeMovement )#moves snake around arena
-        thread1.start()
+        if self.thread1 == None and self.thread2 == None:
+            self.thread1 = Timer( self.refresh*5, self.snakeMovement )#moves snake around arena
+            self.thread1.start()
 
-        thread2 = Timer( self.refresh*10, self.fruit )
-        thread2.start()
+            self.thread2 = Timer( self.refresh*10, self.fruit )
+            self.thread2.start()
 
         return self.gridLayout
 

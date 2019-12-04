@@ -86,6 +86,7 @@
 				{
 					finished = true;
 					snakeGetScore();
+					snakeFinish();
 				}
 			};
 		};		
@@ -105,11 +106,23 @@
                                 document.getElementById("score").innerHTML = xhttp3.response;
                         };
                 };
+		var xhttp4 = new XMLHttpRequest();
+                xhttp4.onreadystatechange = function() 
+                {
+                        if (this.readyState == 4 && this.status == 200) 
+                        {
+                                document.getElementById("score").innerHTML = xhttp3.response;
+                        };
+                };
 		//-------------------------------------------------------------------------------
 
 
 
-
+		function snakeFinish() 
+                {
+                        xhttp4.open("POST", "{{ url_for('snakeFinish') }}", true);
+                        xhttp4.send();
+                }
 		function snakeGetScore() 
                 {
                         xhttp3.open("POST", "{{ url_for('snakeGetScore') }}", true);
@@ -170,18 +183,23 @@
 			else if( event.keyCode == 39 )
                         {
                                 snakePut("3");
-                        };
+                        }
+			else if( event.keyCode == 13 )
+			{
+				start();
+			}
 		}
 	</script>
 
 	<div class="directions">
+		<span>Score: </span><span id="score"></span>
+		<br>
+
 		<span class="symbols" id="snakeHead">{{ snakeHead }}</span>
 		<span class="symbols" id="snakeTail">{{ snakeTail }}</span>
 		<span class="symbols" id="fruit">{{ fruit }}</span>
-		<span>Score: 
-			<span id="score"></span>
-			<br>
-		</span>
+		<br>
+
 		<button type="submit" onclick="start()">start</button>
 		<button type="submit" onclick="snakePut('0')">Up</button>
 		<button type="submit" onclick="snakePut('1')">Down</button>

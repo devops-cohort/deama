@@ -1,7 +1,5 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>Register Page</h1>
-
 <div class="form">
 	<form method="POST" action="">
 		{{ form.hidden_tag() }}
@@ -13,7 +11,7 @@
 				{% endfor %}
 			</div>
 		{% else %}
-			{{ form.login }}
+			{{ form.login }}<span> Login</span>
 		{% endif %}
 		<br>
 		
@@ -25,7 +23,7 @@
                                 {% endfor %}
                         </div>
                 {% else %}
-                        {{ form.password }}
+			{{ form.password }}<span> Password</span>
                 {% endif %}
                 <br>
 
@@ -37,7 +35,7 @@
                                 {% endfor %}
                         </div>
                 {% else %}
-                        {{ form.confirm_password }}
+			{{ form.confirm_password }}<span> Confirm Password</span>
                 {% endif %}
                 <br>
 

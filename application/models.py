@@ -1,29 +1,18 @@
 from application import db, login_manager
 from flask_login import UserMixin
 
-######################################################################
-class Posts(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(64), nullable=False)
-    last_name = db.Column(db.String(64), nullable=False)
-    title = db.Column(db.String(100), nullable=False, unique=True)
-    content = db.Column(db.String(100), nullable=False, unique=True)
 
-    def __repr__(self):
-        return "".join([
-            "User: ", self.first_name, "", self.last_name, "/r/n",
-            "Title: ", self.title, "/r/n", self.content
-            ])
-######################################################################
-
-#login_manager.init_app(app)
 @login_manager.user_loader
-def load_user(login_id):
-    return Account_details.query.get(int(login_id))
+def load_user(player_id):
+    return Account_details.query.get(int(player_id))
+
 
 class Player(db.Model):
     player_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
+
+    account_details = db.relationship("Account_details", backref="player", lazy=True)
+    scores = db.relationship("Scores", backref="player", lazy=True)
 
     def __repr__(self):
         return "".join([

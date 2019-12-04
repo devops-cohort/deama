@@ -1,7 +1,6 @@
 import time
 import random
 from threading import Timer
-import keyboard
 from time import sleep 
 
 

@@ -58,7 +58,7 @@ def snakeGetScore():
 
 @app.route("/snakeGet", methods=["POST"])
 def snakeGet():
-    if gameSessions[session["ID"]].runGame[0] == 1:
+    if gameSessions[session["ID"]].gameState == "finished":
         return "finished"
     else:
         return jsonify( gameSessions[session["ID"]].getGrid() )
@@ -74,7 +74,7 @@ def snakePut():
     if request.data == b"3": #right
         gameSessions[session["ID"]].change(3)
     if request.data == b"start":
-        gameSessions[session["ID"]].runGame[0] = 0
+        gameSessions[session["ID"]].gameState = ""
         gameSessions[session["ID"]].snakeStart()
     return request.data
 

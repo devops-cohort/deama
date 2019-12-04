@@ -11,6 +11,8 @@ Flask-Cors==3.0.8
 Flask-Login==0.4.1
 Flask-LoginManager==1.1.6
 Flask-SQLAlchemy==2.4.1
+Flask-Test==0.1.6
+Flask-Testing==0.7.1
 Flask-WTF==0.14.2
 gunicorn==20.0.4
 httplib2==0.9.2

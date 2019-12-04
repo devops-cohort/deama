@@ -23,7 +23,9 @@ class Snake():
 
     direction = [0] #0 = up, 1 = down, 2 = left, 3 = right
     score = [0]
-    runGame = [0] #0 = run, 1 = stop
+    #runGame = [0] #0 = run, 1 = stop
+    runGame = []
+    gameState = ""
 
     thread1 = None
     thread2 = None
@@ -35,12 +37,12 @@ class Snake():
 
 
 #Threads----------------------------------------------------------------
-    def snakeMovement(self): #thread
+    def snakeMovement(self, runGame): #thread
         try:
             storeOld = [0,0]
             storeOld2 = [0,0]
-            while self.runGame[0] == 0:
-                print("THING")
+            #while self.runGame[0] == 0:
+            while runGame == 0:
                 storeOld[0] = self.snake[0][0]
                 storeOld[1] = self.snake[0][1]
                 if self.direction[0] == 0:
@@ -58,10 +60,12 @@ class Snake():
                     self.snakeSpeed = self.snakeSpeed / 1.04
                     
                 if self.gridLayout[ self.snake[0][0] ][ self.snake[0][1] ] == self.snakeTailSymbol: #end game when snake head meets snake tail
-                    self.runGame[0] = 1
+                    self.snakeStop()
+                    #self.runGame[0] = 1
 
                 if self.snake[0][0] < 0 or self.snake[0][1] < 0: #prevent snake from going negative
-                    self.runGame[0] = 1
+                    #self.runGame[0] = 1
+                    self.snakeStop()
 
                 for i in range( 1, len(self.snake) ):
                     storeOld2[0] = self.snake[i][0]
@@ -77,13 +81,14 @@ class Snake():
                 
                 time.sleep(self.snakeSpeed)
         except:
-            self.runGame[0] = 1
+            self.snakeStop()
+            #self.runGame[0] = 1
         return
 
 
-    def fruit(self):
-        while self.runGame[0] == 0:
-            print("THING2")
+    def fruit(self, runGame):
+        #while self.runGame[0] == 0:
+        while runGame == 0:
             x = random.randint(0, len(self.gridLayout)-1)
             y = random.randint(0, len(self.gridLayout[0])-1)
 
@@ -105,6 +110,11 @@ class Snake():
 
             
 #Functions--------------------------------------------------------------
+    def snakeStop(self):
+        for item in self.runGame:
+            item = 1
+        self.gameState = "finished"
+
     def getScore(self):
         return self.score[0]
 
@@ -131,10 +141,6 @@ class Snake():
                 self.gridLayout[self.snake[i][0]][self.snake[i][1]] = self.snakeTailSymbol #tail
 
     def snakeStart(self):
-        if self.thread1 != None and self.thread2 != None:
-            self.thread1.kill()
-            self.thread2.kill()
-
         self.snake = [[11,8],[11,9],[11,10],[11,11]]
         self.gridLayout = []
         self.direction[0] = 0
@@ -142,16 +148,20 @@ class Snake():
         self.snakeSpeed = 0.1
         self.fruitSpawnTime = 3
 
+        runGame = 0
+        self.runGame.append(runGame)
+
+
 
         for i in range(0, self.arenaY): #y
             self.gridLayout.append([])
             for p in range(0, self.arenaX): #X
                 self.gridLayout[i].append(self.gridSymbol)
 
-        self.thread1 = Timer( self.refresh*5, self.snakeMovement )#moves snake around arena
+        self.thread1 = Timer( self.refresh*5, self.snakeMovement, [runGame] )#moves snake around arena
         self.thread1.start()
 
-        self.thread2 = Timer( self.refresh*10, self.fruit )
+        self.thread2 = Timer( self.refresh*10, self.fruit, [runGame] )
         self.thread2.start()
 
 

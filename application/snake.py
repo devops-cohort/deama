@@ -40,6 +40,7 @@ class Snake():
             storeOld = [0,0]
             storeOld2 = [0,0]
             while self.runGame[0] == 0:
+                print("THING")
                 storeOld[0] = self.snake[0][0]
                 storeOld[1] = self.snake[0][1]
                 if self.direction[0] == 0:
@@ -82,6 +83,7 @@ class Snake():
 
     def fruit(self):
         while self.runGame[0] == 0:
+            print("THING2")
             x = random.randint(0, len(self.gridLayout)-1)
             y = random.randint(0, len(self.gridLayout[0])-1)
 
@@ -129,6 +131,10 @@ class Snake():
                 self.gridLayout[self.snake[i][0]][self.snake[i][1]] = self.snakeTailSymbol #tail
 
     def snakeStart(self):
+        if self.thread1 != None and self.thread2 != None:
+            self.thread1.kill()
+            self.thread2.kill()
+
         self.snake = [[11,8],[11,9],[11,10],[11,11]]
         self.gridLayout = []
         self.direction[0] = 0
@@ -142,12 +148,12 @@ class Snake():
             for p in range(0, self.arenaX): #X
                 self.gridLayout[i].append(self.gridSymbol)
 
-        if self.thread1 == None and self.thread2 == None:
-            self.thread1 = Timer( self.refresh*5, self.snakeMovement )#moves snake around arena
-            self.thread1.start()
+        self.thread1 = Timer( self.refresh*5, self.snakeMovement )#moves snake around arena
+        self.thread1.start()
 
-            self.thread2 = Timer( self.refresh*10, self.fruit )
-            self.thread2.start()
+        self.thread2 = Timer( self.refresh*10, self.fruit )
+        self.thread2.start()
+
 
         return self.gridLayout
 

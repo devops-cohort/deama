@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, request, jsonify, session
 from application import app, db, bcrypt, login_manager
 from application.forms import RegistrationForm, LoginForm, AccountUpdateForm
-from application.models import Account_details, Scores, Player
+from application.models import Account_details, Scores
 from application.snake import Snake
 from flask_login import login_user, current_user, logout_user, login_required
 

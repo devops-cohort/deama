@@ -1,10 +1,9 @@
 import unittest
-  
 from flask import abort, url_for
 from flask_testing import TestCase
 from os import getenv
 from application import app, db, bcrypt
-from application.models import Player, Account_details, Scores
+from application.models import Account_details, Scores
 
 
 class TestBase(TestCase):
@@ -15,7 +14,6 @@ class TestBase(TestCase):
         return app
 
     def setUp(self):
-        db.session.commit()
         db.drop_all()
         db.create_all()
 
@@ -42,16 +40,16 @@ class Test_app(TestBase):
     def test_data_in_database(self):
         hashed_pw = bcrypt.generate_password_hash( "test" )
 
-        player = Player(name="testName")
-        db.session.add(player)
-
-        player_id = Player.query.filter_by( name="testName" ).first().player_id
-
-        account = Account_details( player_id=player_id, login="testName", password=hashed_pw )
+        account = Account_details( login="testName", password=hashed_pw )
 
         db.session.add(account)
         db.session.commit()
 
 
-        player_name = Player.query.filter_by( name="testName").first().name
+        player_name = Account_details.query.filter_by( login="testName").first().login
         self.assertEqual( player_name, "testName" )
+
+        hashed_pw = bcrypt.generate_password_hash( "test" )
+        player_password = Account_details.query.filter_by( login=player_name ).first().password
+        self.assertEqual( bcrypt.check_password_hash(player_password, "test"), True )
+        

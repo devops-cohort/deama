@@ -27,7 +27,7 @@ def account():
     if form.validate_on_submit():
         current_user.login = form.new_login.data
 
-        player_name = Player.query.filter_by( player_id=current_user.get_id() ).first()
+        player_name = Account_details.query.filter_by( player_id=current_user.get_id() ).first()
         player_name.name = form.new_login.data
 
         db.session.commit()
@@ -131,12 +131,7 @@ def register():
     if form.validate_on_submit():
             hashed_pw = bcrypt.generate_password_hash( form.password.data )
 
-            player = Player(name=form.login.data)
-            db.session.add(player)
-
-            player_id = Player.query.filter_by( name=form.login.data ).first().player_id
-
-            account = Account_details( player_id=player_id, login=form.login.data, password=hashed_pw )
+            account = Account_details( login=form.login.data, password=hashed_pw )
 
             db.session.add(account)
             db.session.commit()

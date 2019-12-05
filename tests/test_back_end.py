@@ -52,4 +52,11 @@ class Test_app(TestBase):
         hashed_pw = bcrypt.generate_password_hash( "test" )
         player_password = Account_details.query.filter_by( login=player_name ).first().password
         self.assertEqual( bcrypt.check_password_hash(player_password, "test"), True )
-        
+    
+    def test_update_account(self):
+        current_user.login = form.new_login.data
+
+        player_name = Player.query.filter_by( player_id=current_user.get_id() ).first()
+        player_name.name = form.new_login.data
+
+        db.session.commit()

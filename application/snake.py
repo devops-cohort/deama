@@ -23,7 +23,6 @@ class Snake():
 
     direction = [0] #0 = up, 1 = down, 2 = left, 3 = right
     score = [0]
-    #runGame = [0] #0 = run, 1 = stop
     runGame = []
     gameState = ""
 
@@ -41,7 +40,6 @@ class Snake():
         try:
             storeOld = [0,0]
             storeOld2 = [0,0]
-            #while self.runGame[0] == 0:
             while runGame[0] == 0:
                 storeOld[0] = self.snake[0][0]
                 storeOld[1] = self.snake[0][1]
@@ -61,10 +59,8 @@ class Snake():
                     
                 if self.gridLayout[ self.snake[0][0] ][ self.snake[0][1] ] == self.snakeTailSymbol: #end game when snake head meets snake tail
                     self.snakeStop()
-                    #self.runGame[0] = 1
 
                 if self.snake[0][0] < 0 or self.snake[0][1] < 0: #prevent snake from going negative
-                    #self.runGame[0] = 1
                     self.snakeStop()
 
                 for i in range( 1, len(self.snake) ):
@@ -82,12 +78,10 @@ class Snake():
                 time.sleep(self.snakeSpeed)
         except:
             self.snakeStop()
-            #self.runGame[0] = 1
         return
 
 
     def fruit(self, runGame):
-        #while self.runGame[0] == 0:
         while runGame[0] == 0:
             x = random.randint(0, len(self.gridLayout)-1)
             y = random.randint(0, len(self.gridLayout[0])-1)
@@ -121,7 +115,7 @@ class Snake():
     def getGrid(self):
         return self.gridLayout
 
-    def change(self, key): 
+    def changeDirection(self, key): 
         if self.direction[0] == 0 and key == 1:
             pass
         elif self.direction[0] == 1 and key == 0:
@@ -150,7 +144,6 @@ class Snake():
 
         runGame = [0]
         self.runGame.append(runGame)
-
 
 
         for i in range(0, self.arenaY): #y

@@ -66,13 +66,13 @@ def snakeGet():
 @app.route("/snakePut", methods=["POST"])
 def snakePut():
     if request.data == b"0": #up
-        gameSessions[session["ID"]].change(0)
+        gameSessions[session["ID"]].changeDirection(0)
     if request.data == b"1": #down
-        gameSessions[session["ID"]].change(1)
+        gameSessions[session["ID"]].changeDirection(1)
     if request.data == b"2": #left
-        gameSessions[session["ID"]].change(2)
+        gameSessions[session["ID"]].changeDirection(2)
     if request.data == b"3": #right
-        gameSessions[session["ID"]].change(3)
+        gameSessions[session["ID"]].changeDirection(3)
     if request.data == b"start":
         gameSessions[session["ID"]].snakeStop()
         gameSessions[session["ID"]].gameState = ""

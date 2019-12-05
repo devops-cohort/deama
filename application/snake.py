@@ -22,12 +22,12 @@ class Snake():
     snakeTailSymbol = "="
 
     direction = [0] #0 = up, 1 = down, 2 = left, 3 = right
+    directionConfirm = [0] #for thread to confirm direction change
+
     score = [0]
     runGame = []
     gameState = ""
 
-    thread1 = None
-    thread2 = None
 
 
 
@@ -45,12 +45,16 @@ class Snake():
                 storeOld[1] = self.snake[0][1]
                 if self.direction[0] == 0:
                     self.snake[0][0] = self.snake[0][0] - 1
+                    self.directionConfirm[0] = 1
                 elif self.direction[0] == 1:
                     self.snake[0][0] = self.snake[0][0] + 1
+                    self.directionConfirm[0] = 1
                 elif self.direction[0] == 2:
                     self.snake[0][1] = self.snake[0][1] - 1
+                    self.directionConfirm[0] = 1
                 elif self.direction[0] == 3:
                     self.snake[0][1] = self.snake[0][1] + 1
+                    self.directionConfirm[0] = 1
 
                 if self.gridLayout[ self.snake[0][0] ][ self.snake[0][1] ] == self.fruitSymbol: #make snake longer when fruit eaten, and speed snake up
                     self.snake.append([0,0])
@@ -124,8 +128,9 @@ class Snake():
             pass
         elif self.direction[0] == 3 and key == 2:
             pass
-        else:
+        elif self.directionConfirm[0] == 1:
             self.direction[0] = key
+            self.directionConfirm[0] = 0
 
     def snakeDraw(self):
         for i in range( len(self.snake)-1 ): #-1 maybe error?
@@ -151,11 +156,11 @@ class Snake():
             for p in range(0, self.arenaX): #X
                 self.gridLayout[i].append(self.gridSymbol)
 
-        self.thread1 = Timer( self.refresh*5, self.snakeMovement, [runGame] )#moves snake around arena
-        self.thread1.start()
+        thread1 = Timer( self.refresh*5, self.snakeMovement, [runGame] )#moves snake around arena
+        thread1.start()
 
-        self.thread2 = Timer( self.refresh*10, self.fruit, [runGame] )
-        self.thread2.start()
+        thread2 = Timer( self.refresh*10, self.fruit, [runGame] )
+        thread2.start()
 
 
         return self.gridLayout

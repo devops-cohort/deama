@@ -8,7 +8,6 @@ from flask_login import login_user, current_user, logout_user, login_required
 
 db.create_all()
 
-sessionID = 0
 gameSessions = {}
 snakeBackgroundColor = "grey"
 
@@ -99,11 +98,9 @@ def snakePut():
 def snake():
     if current_user.is_authenticated:
 
-        global sessionID
         global gameSessions
-        session["ID"] = str(sessionID)
-        gameSessions[str(sessionID)] = Snake()
-        sessionID = sessionID + 1
+        session["ID"] = str(current_user.get_id())
+        gameSessions[str(current_user.get_id())] = Snake()
         return render_template( "snake.html", grid = [gameSessions[session["ID"]].arenaX, gameSessions[session["ID"]].arenaY], 
                 snakeHead = gameSessions[session["ID"]].snakeHeadSymbol, snakeTail = gameSessions[session["ID"]].snakeTailSymbol, 
                 fruit = gameSessions[session["ID"]].fruitSymbol, color = snakeBackgroundColor )

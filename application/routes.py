@@ -74,6 +74,7 @@ def snakePut():
     if request.data == b"3": #right
         gameSessions[session["ID"]].change(3)
     if request.data == b"start":
+        gameSessions[session["ID"]].snakeStop()
         gameSessions[session["ID"]].gameState = ""
         gameSessions[session["ID"]].snakeStart()
     return request.data

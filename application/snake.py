@@ -42,7 +42,7 @@ class Snake():
             storeOld = [0,0]
             storeOld2 = [0,0]
             #while self.runGame[0] == 0:
-            while runGame == 0:
+            while runGame[0] == 0:
                 storeOld[0] = self.snake[0][0]
                 storeOld[1] = self.snake[0][1]
                 if self.direction[0] == 0:
@@ -88,7 +88,7 @@ class Snake():
 
     def fruit(self, runGame):
         #while self.runGame[0] == 0:
-        while runGame == 0:
+        while runGame[0] == 0:
             x = random.randint(0, len(self.gridLayout)-1)
             y = random.randint(0, len(self.gridLayout[0])-1)
 
@@ -112,7 +112,7 @@ class Snake():
 #Functions--------------------------------------------------------------
     def snakeStop(self):
         for item in self.runGame:
-            item = 1
+            item[0] = 1
         self.gameState = "finished"
 
     def getScore(self):
@@ -148,7 +148,7 @@ class Snake():
         self.snakeSpeed = 0.1
         self.fruitSpawnTime = 3
 
-        runGame = 0
+        runGame = [0]
         self.runGame.append(runGame)
 
 

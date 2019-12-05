@@ -14,6 +14,8 @@ class AccountUpdateForm(FlaskForm):
 
     submit = SubmitField("Change")
 
+    delete = SubmitField("Delete account")
+
     def validate_login(self, login):
         if login.data != current_user.login:
             user = Account_details.query.filter_by(login = login.data).first()

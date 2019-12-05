@@ -1,3 +1,4 @@
+from sqlalchemy import desc
 from flask import render_template, redirect, url_for, request, jsonify, session
 from application import app, db, bcrypt, login_manager
 from application.forms import RegistrationForm, LoginForm, AccountUpdateForm
@@ -21,21 +22,35 @@ def home():
 
 
 @app.route("/account", methods=["GET","POST"])
-@login_required
 def account():
-    form = AccountUpdateForm()
-    if form.validate_on_submit():
-        current_user.login = form.new_login.data
+    if current_user.is_authenticated:
+        form = AccountUpdateForm()
+        if form.validate_on_submit():
+            if form.delete.data:
+                player_name = Account_details.query.filter_by( player_id=current_user.get_id() ).first()
+                db.session.delete(player_name)
 
-        player_name = Account_details.query.filter_by( player_id=current_user.get_id() ).first()
-        player_name.name = form.new_login.data
+                player_scores = Scores.query.filter_by( player_id=None )
+                for deleted in player_scores:
+                    db.session.delete(deleted)
 
-        db.session.commit()
-        return redirect(url_for("account"))
-    elif request.method == "GET":
-        form.new_login.data = current_user.login
+                db.session.commit()
+                return redirect(url_for("login"))
 
-    return render_template("account.html", title = "Account update", form = form)
+            else:
+                current_user.login = form.new_login.data
+
+                player_name = Account_details.query.filter_by( player_id=current_user.get_id() ).first()
+                player_name.name = form.new_login.data
+
+                db.session.commit()
+                return redirect(url_for("account"))
+        elif request.method == "GET":
+            form.new_login.data = current_user.login
+
+        return render_template("account.html", title = "Account update", form = form)
+
+    return redirect(url_for("login"))
 
 
 @app.route("/snakeFinish", methods=["POST"])
@@ -49,7 +64,8 @@ def snakeFinish():
             db.session.add(score)
             db.session.commit()
 
-    return "done"
+        return "done"
+    return "not authenticated"
 
 
 @app.route("/snakeGetScore", methods=["POST"])
@@ -137,3 +153,22 @@ def register():
             db.session.commit()
             return redirect( url_for("snake") )
     return render_template("register.html", title="Register", form=form)
+
+
+@app.route("/scores", methods=["GET","POST"])
+def scores():
+    if current_user.is_authenticated:
+        scoreEntries = Scores.query.filter_by( player_id=current_user.get_id() )
+        scoreEntries = scoreEntries.order_by(desc(Scores.score))
+
+        allTimeHigh = Scores.query.filter_by() #query.all() doesn't seem to work with order_by()
+        allTimeHigh = allTimeHigh.order_by(desc(Scores.score)).first()
+
+        allTimeHigh_id = allTimeHigh.player_id
+
+        allTimeHighName = Account_details.query.filter_by( player_id=allTimeHigh_id ).first().login
+
+        return render_template("scores.html", title="Scores: ", scoreEntries = scoreEntries, allTimeHigh = allTimeHigh.score,
+                allTimeHighName = allTimeHighName)
+
+    return redirect(url_for("login"))

@@ -26,12 +26,27 @@ class TestBase(TestCase):
 
 class Test_app(TestBase):
 
-    def test_homepage_view(self):
+    def test_homePage_view(self):
         response = self.client.get(url_for("home"))
         self.assertEqual(response.status_code, 200)
 
-    def test_login_view(self):
+    def test_loginPage_view(self):
+        response = self.client.get(url_for("login"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_registerPage_view(self):
+        response = self.client.get(url_for("register"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_snakePage_view(self):
         target_url = url_for("snake")
+        redirect_url = url_for("login")
+        response = self.client.get(target_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, redirect_url)
+
+    def test_accountUpdatePage_view(self):
+        target_url = url_for("account")
         redirect_url = url_for("login")
         response = self.client.get(target_url)
         self.assertEqual(response.status_code, 302)

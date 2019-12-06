@@ -1,6 +1,10 @@
 pipeline 
 {
 	agent any
+	environment 
+	{
+		install_dir = "install_dir=/opt/flask-app"
+	}
 
 	stages 
 	{
@@ -8,7 +12,6 @@ pipeline
 		{
 			steps 
 			{
-				sh "install_dir=/opt/flask-app"
 				sh "ssh 35.228.15.74 << EOF"
 			}
 		}

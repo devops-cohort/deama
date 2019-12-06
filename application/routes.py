@@ -17,6 +17,9 @@ def home():
     return render_template("home.html", title="Snake game online")
 
 
+@app.route("/coverage")
+def coverage():
+    return render_template("coverage.html")
 
 
 

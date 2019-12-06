@@ -75,6 +75,7 @@ pipeline
 						source venv/bin/activate
 						pip3 install -r requirements.txt
 						pytest --cov . --cov-report=html
+						rm ./application/templates/coverage.html
 						mv ./htmlcov/index.html ./application/templates/coverage.html
 						rm -r ./htmlcov/
 				'''

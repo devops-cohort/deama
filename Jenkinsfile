@@ -8,7 +8,8 @@ pipeline
 		{
 			steps 
 			{
-				sh "ssh 35.228.15.74 << "EOF""
+				sh "install_dir=/opt/flask-app"
+				sh "ssh 35.228.15.74 << EOF"
 			}
 		}
 		stage("setup_git_repo") 
@@ -41,13 +42,6 @@ pipeline
 			{
 				sh "sudo systemctl daemon-reload"
 				sh "sudo systemctl stop flask-app"
-			}
-		}
-		stage("variable_setup") 
-		{
-			steps 
-			{
-				sh "install_dir=/opt/flask-app"
 			}
 		}
 		stage("setup_directory") 

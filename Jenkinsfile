@@ -15,9 +15,9 @@ pipeline
 		{
 			steps 
 			{
+				sh "sudo rm -r ./deama"
 				sh "git clone --single-branch --branch prototype https://github.com/devops-cohort/deama.git"
 				sh "cd ./deama"
-				sh "git pull"
 				sh "sudo apt update"
 			}
 		}

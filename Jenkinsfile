@@ -8,7 +8,7 @@ pipeline
 		{
 			steps 
 			{
-				sh "ssh 35.228.15.74 << 'EOF'"
+				sh "ssh 35.228.15.74 << "EOF""
 			}
 		}
 		stage("setup_git_repo") 

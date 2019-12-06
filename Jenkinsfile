@@ -18,6 +18,8 @@ pipeline
 					sh "git clone --single-branch --branch prototype https://github.com/devops-cohort/deama.git"
 					sh "cd ./deama"
 					sh "sudo apt update"
+					sh "pwd"
+					sh "ls"
 			}
 		}
 		stage("pip_install") 
@@ -33,7 +35,11 @@ pipeline
 			steps 
 			{
 				sh "ssh 35.228.15.74 << EOF"
-					sh "cd ~/deama"
+					sh "pwd"
+					sh "ls"
+					sh "cd ~/deama" 
+					sh "pwd"
+					sh "ls"
 					sh "sudo cp ./flask-app.service /etc/systemd/system/"
 			}
 		}

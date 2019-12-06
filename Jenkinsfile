@@ -71,7 +71,7 @@ pipeline
 					sudo su - pythonadm << BOB
 						cd ${install_dir}
 						pip3 install virtualenv
-						virtualenv -p python3 venv
+						python3 ~/.local/lib/python3.6/site-packages/virtualenv.py venv
 						source venv/bin/activate
 						pip3 install -r requirements.txt
 						pytest --cov . --cov-report=html

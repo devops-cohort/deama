@@ -63,7 +63,7 @@ pipeline
 				'''
 			}
 		}
-		stage("switch_user_to_pythonadm_and_run_commands") 
+		stage("switch_user_to_pythonadm_and_setup_environment_and_setup_requirements_and_run_test_coverage") 
 		{
 			steps 
 			{
@@ -74,7 +74,9 @@ pipeline
 						virtualenv -p python3 venv
 						source venv/bin/activate
 						pip3 install -r requirements.txt
-						pytest
+						pytest --cov . --cov-report=html
+						mv ./htmlcov/index.html ./
+						rm -r ./htmlcov/
 				'''
 			}
 		}

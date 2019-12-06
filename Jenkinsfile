@@ -3,7 +3,7 @@ pipeline
 	agent any
 	environment 
 	{
-		install_dir = "install_dir=/opt/flask-app"
+		install_dir = "/opt/flask-app"
 	}
 
 	stages 
@@ -51,10 +51,10 @@ pipeline
 		{
 			steps 
 			{
-				sh "sudo rm -rf "+env.install_dir
-				sh "sudo mkdir "+env.install_dir
-				sh "sudo cp -r ./* "+env.install_dir
-				sh "sudo chown -R pythonadm:pythonadm "+env.install_dir
+				sh "sudo rm -rf ${install_dir}"
+				sh "sudo mkdir ${install_dir}"
+				sh "sudo cp -r ./* ${install_dir}"
+				sh "sudo chown -R pythonadm:pythonadm ${install_dir}"
 			}
 		}
 		stage("switch_user_to_pythonadm_and_run_commands") 

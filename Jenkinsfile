@@ -12,7 +12,7 @@ pipeline
 		{
 			steps 
 			{
-				sh "ssh 35.228.15.74"
+				sh "ssh 35.228.15.74 << EOF pwd EOF"
 					sh "cd ~/"
 					sh "sudo rm -r ./deama"
 					sh "git clone --single-branch --branch prototype https://github.com/devops-cohort/deama.git"

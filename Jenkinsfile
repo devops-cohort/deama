@@ -12,14 +12,16 @@ pipeline
 		{
 			steps 
 			{
-				sh "ssh 35.228.15.74 << EOF pwd && pwd EOF"
-					sh "cd ~/"
-					sh "sudo rm -r ./deama"
-					sh "git clone --single-branch --branch prototype https://github.com/devops-cohort/deama.git"
-					sh "cd ./deama"
-					sh "sudo apt update"
-					sh "pwd"
-					sh "ls"
+				sh '''ssh 35.228.15.74 << EOF
+					cd ~/
+					sudo rm -r ./deama
+					git clone --single-branch --branch prototype https://github.com/devops-cohort/deama.git
+					cd ./deama
+					sudo apt update
+					pwd
+					ls
+				EOF
+				'''
 			}
 		}
 		stage("pip_install") 

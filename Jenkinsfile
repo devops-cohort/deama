@@ -17,7 +17,6 @@ pipeline
 					sh "git clone --single-branch --branch prototype https://github.com/devops-cohort/deama.git"
 					sh "cd ./deama"
 					sh "sudo apt update"
-				sh "EOF"
 			}
 		}
 		stage("pip_install") 
@@ -26,7 +25,6 @@ pipeline
 			{
 				sh "ssh 35.228.15.74 << EOF"
 					sh "sudo apt install -y python3-pip"
-				sh "EOF"
 			}
 		}
 		stage("install_service_script") 
@@ -36,7 +34,6 @@ pipeline
 				sh "ssh 35.228.15.74 << EOF"
 					sh "cd ~/deama"
 					sh "sudo cp ./flask-app.service /etc/systemd/system/"
-				sh "EOF"
 			}
 		}
 		stage("systemctl") 
@@ -46,7 +43,6 @@ pipeline
 				sh "ssh 35.228.15.74 << EOF"
 					sh "sudo systemctl daemon-reload"
 					sh "sudo systemctl stop flask-app"
-				sh "EOF"
 			}
 		}
 		stage("setup_directory") 
@@ -59,7 +55,6 @@ pipeline
 					sh "sudo mkdir ${install_dir}"
 					sh "sudo cp -r ./* ${install_dir}"
 					sh "sudo chown -R pythonadm:pythonadm ${install_dir}"
-				sh "EOF"
 			}
 		}
 		stage("switch_user_to_pythonadm_and_run_commands") 
@@ -73,8 +68,6 @@ pipeline
 						sh "virtualenv -p python3 venv"
 						sh "source venv/bin/activate"
 						sh "pip3 install -r requirements.txt"
-					sh "BOB"
-				sh "EOF"
 			}
 		}
 		stage("start_flask_app_via_systemd") 
@@ -83,7 +76,6 @@ pipeline
 			{
 				sh "ssh 35.228.15.74 << EOF"
 					sh "sudo systemctl start flask-app"
-				sh "EOF"
 			}
 		}
 	}

@@ -52,7 +52,7 @@ class Test_app(TestBase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, redirect_url)
 
-    def test_data_in_database(self):
+    def test_insert_into_database(self):
         hashed_pw = bcrypt.generate_password_hash( "test" )
 
         account = Account_details( login="testName", password=hashed_pw )
@@ -78,3 +78,25 @@ class Test_app(TestBase):
 
         player_name = Account_details.query.filter_by( login="testName2").first()
         self.assertEqual( player_name.login, "testName2" ) 
+
+    def test_insert_into_account_details_and_scores_and_delete_account_details_and_scores(self):
+        account = Account_details( login="testName", password="test" )
+        db.session.add(account)
+        
+        score = Scores( player_id = 1, score=99 )
+        db.session.add(score)
+        score2 = Scores( player_id = 1, score=88 )
+        db.session.add(score2)
+
+        player_name = Account_details.query.filter_by( player_id=1 ).first()
+        db.session.delete(player_name)
+
+        player_scores = Scores.query.filter_by( player_id=None )
+        for deleted in player_scores:
+            db.session.delete(deleted)
+
+        test_score = Scores.query.all()
+
+        db.session.commit()
+
+        self.assertEqual( test_score, [] )

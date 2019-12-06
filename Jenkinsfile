@@ -12,11 +12,7 @@ pipeline
 		{
 			steps 
 			{
-				sh "ssh 35.228.15.74 << EOF
-					cd ~/
-					pwd
-					ls
-				EOF"
+				sh "ssh 35.228.15.74"
 					sh "cd ~/"
 					sh "sudo rm -r ./deama"
 					sh "git clone --single-branch --branch prototype https://github.com/devops-cohort/deama.git"
@@ -30,7 +26,7 @@ pipeline
 		{
 			steps 
 			{
-				sh "ssh 35.228.15.74 << EOF"
+				sh "ssh 35.228.15.74"
 					sh "sudo apt install -y python3-pip"
 			}
 		}
@@ -38,7 +34,7 @@ pipeline
 		{
 			steps 
 			{
-				sh "ssh 35.228.15.74 << EOF"
+				sh "ssh 35.228.15.74"
 					sh "pwd"
 					sh "ls"
 					sh "cd ~/deama" 

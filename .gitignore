@@ -1,0 +1,7 @@
+application/venv
+application/snakeOld.py
+application/routesOld.py
+__pycache__
+pythonTables.py
+htmlcov/
+.coverage

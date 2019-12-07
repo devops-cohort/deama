@@ -4,3 +4,4 @@ application/routesOld.py
 __pycache__
 pythonTables.py
 htmlcov/
+.coverage

@@ -46,12 +46,7 @@
 
                 socket.on("connect", function() 
                 {
-                        socket.emit("talkingServer", {data: "test"});
                         console.log("connected");
-                });
-		socket.on("talkingClient", function()
-                {
-                        socket.emit("talkingServer", {data: "test"});
                 });
 
                 socket.on("snakeGetClient", function(msg, cb) 

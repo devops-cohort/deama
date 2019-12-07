@@ -9,6 +9,7 @@ from flask_socketio import SocketIO, emit
 
 db.create_all()
 
+sessionID = 0
 gameSessions = {}
 snakeBackgroundColor = "grey"
 
@@ -21,7 +22,6 @@ def home():
 @app.route("/coverage")
 def coverage():
     return render_template("coverage.html")
-
 
 
 @app.route("/account", methods=["GET","POST"])
@@ -60,12 +60,12 @@ def account():
 @socketio.on("connect", namespace="/snake")
 def snakeConnect():
     pass
-
-#just passing back messages back and forward to keep the connection alive
-@socketio.on("talkingServer", namespace="/snake")
-def snakePass():
-    emit("talkingClient", {"grid":""})
-    
+#    global gameSessions
+#    session["ID"] = request.sid
+#    gameSessions[request.sid] = Snake()
+#    return render_template( "snake.html", grid = [gameSessions[session["ID"]].arenaX, gameSessions[session["ID"]].arenaY],
+#            snakeHead = gameSessions[session["ID"]].snakeHeadSymbol, snakeTail = gameSessions[session["ID"]].snakeTailSymbol,
+#            fruit = gameSessions[session["ID"]].fruitSymbol, color = snakeBackgroundColor )
 
 @socketio.on("snakeFinish", namespace="/snake")
 def snakeFinish(message):
@@ -109,10 +109,11 @@ def snakeInput(message):
 @app.route("/snake", methods=["GET"])
 def snake():
     if current_user.is_authenticated:
-
+        global sessionID
         global gameSessions
-        session["ID"] = str(current_user.get_id())
-        gameSessions[str(current_user.get_id())] = Snake()
+        session["ID"] = str(sessionID)
+        gameSessions[str(sessionID)] = Snake()
+        sessionID = sessionID + 1
         return render_template( "snake.html", grid = [gameSessions[session["ID"]].arenaX, gameSessions[session["ID"]].arenaY], 
                 snakeHead = gameSessions[session["ID"]].snakeHeadSymbol, snakeTail = gameSessions[session["ID"]].snakeTailSymbol, 
                 fruit = gameSessions[session["ID"]].fruitSymbol, color = snakeBackgroundColor )

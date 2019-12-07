@@ -13,8 +13,18 @@ The snake game would involve user manipulating an entity on a arena, the user wo
 
 ## Original ERD diagram
 ![ERD diagram](/images/ERD.png)
+Player would have a one to many relationship with Scores.  
+Account details would have a one-to-one relationship with Player.
+
 <br>
 
 ## Original Use Case Diagram
 ![use case diagram](/images/UseCase.png)
+
+
+# What I got
+the Use case and the functionality of the original project idea is essentially completely intact, however I have decided to change the database as I thought one of the tables was redundant.
+
+## New ERD diagram
+![ERD new diagram](/images/ERDnew.png)
 

@@ -1,10 +1,11 @@
 from sqlalchemy import desc
 from flask import render_template, redirect, url_for, request, jsonify, session
-from application import app, db, bcrypt, login_manager
+from application import app, db, bcrypt, login_manager, socketio
 from application.forms import RegistrationForm, LoginForm, AccountUpdateForm
 from application.models import Account_details, Scores
 from application.snake import Snake
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_socketio import SocketIO, emit
 
 db.create_all()
 
@@ -55,8 +56,14 @@ def account():
     return redirect(url_for("login"))
 
 
-@app.route("/snakeFinish", methods=["POST"])
-def snakeFinish():
+
+@socketio.on("connect", namespace="/snake")
+def snakeConnect():
+    print("connected")
+    pass
+
+@socketio.on("snakeFinish", namespace="/snake")
+def snakeFinish(message):
     if current_user.is_authenticated:
         scoreNumber = Scores.query.filter_by( player_id=current_user.get_id() ). \
             filter_by( score=gameSessions[session["ID"]].getScore() ).first()
@@ -66,36 +73,34 @@ def snakeFinish():
             db.session.add(score)
             db.session.commit()
 
-        return "done"
-    return "not authenticated"
 
+@socketio.on("snakeStart", namespace="/snake")
+def snakeStart(message):
+    print("startSnake")
+    gameSessions[session["ID"]].snakeStop()
+    gameSessions[session["ID"]].gameState = ""
+    gameSessions[session["ID"]].snakeStart()
+    emit("snakeGetClient", {"grid":gameSessions[session["ID"]].getGrid(), "score":gameSessions[session["ID"]].getScore()})
 
-@app.route("/snakeGetScore", methods=["POST"])
-def snakeGetScore():
-    return jsonify( gameSessions[session["ID"]].getScore() )
-
-@app.route("/snakeGet", methods=["POST"])
-def snakeGet():
+@socketio.on("snakeGetServer", namespace="/snake")
+def snakeGet(message):
     if gameSessions[session["ID"]].gameState == "finished":
-        return "finished"
+        emit("snakeFinishClient", {"grid":gameSessions[session["ID"]].getGrid(), "score":gameSessions[session["ID"]].getScore()})
     else:
-        return jsonify( gameSessions[session["ID"]].getGrid() )
+        emit("snakeGetClient", {"grid":gameSessions[session["ID"]].getGrid(), "score":gameSessions[session["ID"]].getScore()})
 
-@app.route("/snakePut", methods=["POST"])
-def snakePut():
-    if request.data == b"0": #up
+@socketio.on("snakeInputServer", namespace="/snake")
+def snakeInput(message):
+    if message["data"] == "0": #up
         gameSessions[session["ID"]].changeDirection(0)
-    if request.data == b"1": #down
+    if message["data"] == "1": #down
         gameSessions[session["ID"]].changeDirection(1)
-    if request.data == b"2": #left
+    if message["data"] == "2": #left
         gameSessions[session["ID"]].changeDirection(2)
-    if request.data == b"3": #right
+    if message["data"] == "3": #right
         gameSessions[session["ID"]].changeDirection(3)
-    if request.data == b"start":
-        gameSessions[session["ID"]].snakeStop()
-        gameSessions[session["ID"]].gameState = ""
-        gameSessions[session["ID"]].snakeStart()
-    return request.data
+
+
 
 @app.route("/snake", methods=["GET"])
 def snake():
@@ -172,3 +177,4 @@ def scores():
                 allTimeHighName = allTimeHighName)
 
     return redirect(url_for("login"))
+

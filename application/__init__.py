@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 import pymysql
 import os
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
 
@@ -15,5 +16,6 @@ bcrypt = Bcrypt(app)
 
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
+socketio = SocketIO(app)
 
 from application import routes

@@ -1,7 +1,9 @@
 # Online Snake Game
 
 Jenkins: **34.89.51.152:8080**  
-Flask: **34.76.185.11:5001**
+Flask: **34.76.185.11:5001**  
+Pytest-coverage: **34.76.185.11:5001/coverage**
+<br><br><br><br><br><br><br><br>
 
 
 # Original Project Idea
@@ -11,3 +13,8 @@ The snake game would involve user manipulating an entity on a arena, the user wo
 
 ## Original ERD diagram
 ![ERD diagram](/images/ERD.png)
+<br>
+
+## Original Use Case Diagram
+![use case diagram](/images/UseCase.png)
+

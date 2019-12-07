@@ -75,7 +75,7 @@ pipeline
 						python3 ~/.local/lib/python3.6/site-packages/virtualenv.py ./application/venv
 						source ./application/venv/bin/activate
 						pip3 install -r requirements.txt
-						pytest --cov ./ --cov-report=html
+						pytest --cov --cov=app tests/ --cov-report=html
 						rm ./application/templates/coverage.html
 						mv ./htmlcov/index.html ./application/templates/coverage.html
 						rm -r ./htmlcov/

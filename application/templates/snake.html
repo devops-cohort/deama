@@ -42,7 +42,7 @@
         <script>
                 namespace = "/snake";
 
-                var socket = io(namespace);
+                var socket = io(namespace,{transports: ["websocket"]});
 
                 socket.on("connect", function() 
                 {

@@ -4,6 +4,7 @@ pipeline
 	environment 
 	{
 		install_dir = "/opt/flask-app"
+		ssh_ip = "34.76.185.11"
 	}
 
 	stages 
@@ -12,7 +13,7 @@ pipeline
 		{
 			steps 
 			{
-				sh '''ssh 35.228.15.74 << EOF
+				sh '''ssh ${ssh_ip} << EOF
 					cd ~/
 					sudo rm -r ./deama
 					git clone --single-branch --branch prototype https://github.com/devops-cohort/deama.git
@@ -25,7 +26,7 @@ pipeline
 		{
 			steps 
 			{
-				sh '''ssh 35.228.15.74 << EOF
+				sh '''ssh ${ssh_ip} << EOF
 					sudo apt install -y python3-pip
 				'''
 			}
@@ -34,7 +35,7 @@ pipeline
 		{
 			steps 
 			{
-				sh '''ssh 35.228.15.74 << EOF
+				sh '''ssh ${ssh_ip} << EOF
 					cd ~/deama
 					sudo cp ./flask-app.service /etc/systemd/system/
 				'''
@@ -44,7 +45,7 @@ pipeline
 		{
 			steps 
 			{
-				sh '''ssh 35.228.15.74 << EOF
+				sh '''ssh ${ssh_ip} << EOF
 					sudo systemctl daemon-reload
 					sudo systemctl stop flask-app
 				'''
@@ -54,7 +55,7 @@ pipeline
 		{
 			steps 
 			{
-				sh '''ssh 35.228.15.74 << EOF
+				sh '''ssh ${ssh_ip} << EOF
 					cd ~/deama
 					sudo rm -rf ${install_dir}
 					sudo mkdir ${install_dir}
@@ -67,7 +68,7 @@ pipeline
 		{
 			steps 
 			{
-				sh '''ssh 35.228.15.74 << EOF
+				sh '''ssh ${ssh_ip} << EOF
 					sudo su - pythonadm << BOB
 						cd ${install_dir}
 						pip3 install virtualenv
@@ -85,7 +86,7 @@ pipeline
 		{
 			steps 
 			{
-				sh '''ssh 35.228.15.74 << EOF
+				sh '''ssh ${ssh_ip} << EOF
 					sudo systemctl start flask-app
 				'''
 			}

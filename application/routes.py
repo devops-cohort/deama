@@ -59,64 +59,54 @@ def account():
 
 @socketio.on("connect", namespace="/snake")
 def snakeConnect():
-    pass
-#    global gameSessions
-#    session["ID"] = request.sid
-#    gameSessions[request.sid] = Snake()
-#    return render_template( "snake.html", grid = [gameSessions[session["ID"]].arenaX, gameSessions[session["ID"]].arenaY],
-#            snakeHead = gameSessions[session["ID"]].snakeHeadSymbol, snakeTail = gameSessions[session["ID"]].snakeTailSymbol,
-#            fruit = gameSessions[session["ID"]].fruitSymbol, color = snakeBackgroundColor )
+    global gameSessions
+    gameSessions[request.sid] = Snake()
 
 @socketio.on("snakeFinish", namespace="/snake")
 def snakeFinish(message):
     if current_user.is_authenticated:
         scoreNumber = Scores.query.filter_by( player_id=current_user.get_id() ). \
-            filter_by( score=gameSessions[session["ID"]].getScore() ).first()
+            filter_by( score=gameSessions[request.sid].getScore() ).first()
 
         if scoreNumber == None:
-            score = Scores( player_id=current_user.get_id(), score=gameSessions[session["ID"]].getScore() )
+            score = Scores( player_id=current_user.get_id(), score=gameSessions[request.sid].getScore() )
             db.session.add(score)
             db.session.commit()
 
 
 @socketio.on("snakeStart", namespace="/snake")
 def snakeStart(message):
-    gameSessions[session["ID"]].snakeStop()
-    gameSessions[session["ID"]].gameState = ""
-    gameSessions[session["ID"]].snakeStart()
-    emit("snakeGetClient", {"grid":gameSessions[session["ID"]].getGrid(), "score":gameSessions[session["ID"]].getScore()})
+    gameSessions[request.sid].snakeStop()
+    gameSessions[request.sid].gameState = ""
+    gameSessions[request.sid].snakeStart()
+    emit("snakeGetClient", {"grid":gameSessions[request.sid].getGrid(), "score":gameSessions[request.sid].getScore()})
 
 @socketio.on("snakeGetServer", namespace="/snake")
 def snakeGet(message):
-    if gameSessions[session["ID"]].gameState == "finished":
-        emit("snakeFinishClient", {"grid":gameSessions[session["ID"]].getGrid(), "score":gameSessions[session["ID"]].getScore()})
+    if gameSessions[request.sid].gameState == "finished":
+        emit("snakeFinishClient", {"grid":gameSessions[request.sid].getGrid(), "score":gameSessions[request.sid].getScore()})
     else:
-        emit("snakeGetClient", {"grid":gameSessions[session["ID"]].getGrid(), "score":gameSessions[session["ID"]].getScore()})
+        emit("snakeGetClient", {"grid":gameSessions[request.sid].getGrid(), "score":gameSessions[request.sid].getScore()})
 
 @socketio.on("snakeInputServer", namespace="/snake")
 def snakeInput(message):
     if message["data"] == "0": #up
-        gameSessions[session["ID"]].changeDirection(0)
+        gameSessions[request.sid].changeDirection(0)
     if message["data"] == "1": #down
-        gameSessions[session["ID"]].changeDirection(1)
+        gameSessions[request.sid].changeDirection(1)
     if message["data"] == "2": #left
-        gameSessions[session["ID"]].changeDirection(2)
+        gameSessions[request.sid].changeDirection(2)
     if message["data"] == "3": #right
-        gameSessions[session["ID"]].changeDirection(3)
+        gameSessions[request.sid].changeDirection(3)
 
 
 
 @app.route("/snake", methods=["GET"])
 def snake():
     if current_user.is_authenticated:
-        global sessionID
-        global gameSessions
-        session["ID"] = str(sessionID)
-        gameSessions[str(sessionID)] = Snake()
-        sessionID = sessionID + 1
-        return render_template( "snake.html", grid = [gameSessions[session["ID"]].arenaX, gameSessions[session["ID"]].arenaY], 
-                snakeHead = gameSessions[session["ID"]].snakeHeadSymbol, snakeTail = gameSessions[session["ID"]].snakeTailSymbol, 
-                fruit = gameSessions[session["ID"]].fruitSymbol, color = snakeBackgroundColor )
+        snake = Snake()
+        return render_template( "snake.html", grid = [snake.arenaX, snake.arenaY], snakeHead = snake.snakeHeadSymbol,
+                snakeTail = snake.snakeTailSymbol, fruit = snake.fruitSymbol, color = snakeBackgroundColor )
 
     return redirect(url_for("login"))
 

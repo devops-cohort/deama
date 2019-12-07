@@ -59,8 +59,13 @@ def account():
 
 @socketio.on("connect", namespace="/snake")
 def snakeConnect():
-    print("connected")
     pass
+
+#just passing back messages back and forward to keep the connection alive
+@socketio.on("talkingServer", namespace="/snake")
+def snakePass():
+    emit("talkingClient", {"grid":""})
+    
 
 @socketio.on("snakeFinish", namespace="/snake")
 def snakeFinish(message):
@@ -76,7 +81,6 @@ def snakeFinish(message):
 
 @socketio.on("snakeStart", namespace="/snake")
 def snakeStart(message):
-    print("startSnake")
     gameSessions[session["ID"]].snakeStop()
     gameSessions[session["ID"]].gameState = ""
     gameSessions[session["ID"]].snakeStart()

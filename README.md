@@ -39,7 +39,7 @@ After thinking about the issue, I realised websockets would fix my problem and s
 # Testing
 Testing was done using pytest and a coverage has also been supplied. Look at *References* for the link to the coverage.  
 <br>
-74% coverage was achieved.  
+66% coverage was achieved.  
 11 tests total have been created and executed; 3 of which were used to test the snake game, and the rest were used to test the website and database functionality.  
 Coverage may further be increased if integration testing could be performed, such as using Selenium to test the more user-dependant functionalities such as being able to login, test the forms, test the jinja2 code, etc...  
 

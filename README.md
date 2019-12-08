@@ -22,7 +22,7 @@ Account details would have a one-to-one relationship with Player.
 <br>
 
 ### Original Use Case Diagram
-![use case diagram](/images/UseCase.png)
+![use case diagram](/images/UseCase2.png)
 
 # What I got
 The Use case and the functionality of the original project idea is essentially completely intact to that of what I had envisioned, however I have decided to change the database as I thought one of the tables was redundant.

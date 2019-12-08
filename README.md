@@ -13,25 +13,25 @@ Allow a user to register then login, play a snake game which would record their 
 
 The snake game would involve user manipulating an entity on a arena, the user would be able to collect fruits which would increase the length of the snake entity, and increase the user's score. If the snake entity hit the edge of the arena, the game would be over.
 
-## Original ERD diagram
+### Original ERD diagram
 ![ERD diagram](/images/ERD.png)
 Player would have a one to many relationship with Scores.  
 Account details would have a one-to-one relationship with Player.
 
 <br>
 
-## Original Use Case Diagram
+### Original Use Case Diagram
 ![use case diagram](/images/UseCase.png)
 
 # What I got
 The Use case and the functionality of the original project idea is essentially completely intact to that of what I had envisioned, however I have decided to change the database as I thought one of the tables was redundant.
 
-## New ERD diagram
+### New ERD diagram
 ![ERD new diagram](/images/ERDnew.png)
 Now there are simply two tables with Account details filling the void of what Player table was doing previously.  
-Account details has a one-to-many relationship with Scores table.
+Account details has a one-to-many relationship with Scores table.  
 
-## Had to switch to websocket for game connection
+### Had to switch to websocket for game connection
 During development, I used Ajax requests from the client to poll the python flask server for information on the state of the snake game. This, I later realised, proved to be flawed because if the server location happened to be too far away (e.g from Manchester to Finland), the Ajax requests would not be processed as the connections kept dropping at almost 100% of the time.  
 After thinking about the issue, I realised websockets would fix my problem and should also make the interaction between client and server smoother, so I went ahead and re-did the implementation of how the client would poll the server for information. It instead now uses a communicational system wherein after establishing a session, the client asks for information and waits for the server to respond, once the server responds, the client processes the information and sends another request for newer information.  
 
@@ -47,10 +47,10 @@ However, I have still included some minor tests for the snake game specifically 
 
 # Deployment Overview
 ![techs used](/images/tech.png)
-Made a webserver application using Python, MySQL, and Flask. Used git and github for version control whilst using Trello to organise myself. Github would submit requests to Jenkins to update, test using pytest, and redeploy the application. Finally, the cloud provide, GCP, was used to host the application.
+Made a webserver application using Python, MySQL, and Flask. Used git and github for version control whilst using Trello to organise myself. Github would submit requests to Jenkins to update, test using pytest, and redeploy the application. Finally, the cloud provide, GCP, was used to host the application.  
 
 Technologies used:  
-Python/Mysql/Flask
+Python/Mysql/Flask  
 Git/Github  
 Trello  
 Jenkins  

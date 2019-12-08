@@ -32,6 +32,8 @@ Now there are simply two tables with Account details filling the void of what Pl
 Account details has a one-to-many relationship with Scores table.
 
 ## Had to switch to websocket for game connection
+During development, I used Ajax requests from the client to poll the python flask server for information on the state of the snake game. This, I later realised, proved to be flawed because if the server location happened to be too far away (e.g from Manchester to Finland), the Ajax requests would not be processed as the connections kept dropping at almost 100% of the time.  
+After thinking about the issue, I realised websockets would fix my problem and should also make the interaction between client and server smoother, so I went ahead and re-did the implementation of how the client would poll the server for information. It instead now uses a communicational system wherein after establishing a session, the client asks for information and waits for the server to respond, once the server responds, the client processes the information and sends another request for newer information.  
 
 # Testing
 Testing was done using pytest and a coverage has also been supplied. Look at *References* for the link to the coverage.  
@@ -57,6 +59,6 @@ GCP
 
 # The Future
 Many things could be improved. For example, I am not really sure how multi-threading is done under the hood in Python, so whether my snake game is thread safe is unknown at this point, so more research would definitely help. In terms of looks, the website looks pretty barebones, perhaps integrating a front-end View framework such as Bootstrap would be a good idea.  
-Further expanding the game would be interesting, such as adding multi-player functionality wherein two snakes would be in the same arena, and the one that hits the others' tail loses. 
-
-
+Further expanding the game would be interesting, such as adding multi-player functionality wherein two snakes would be in the same arena, and the one that hits the others' tail loses.  
+<br>
+For the snake game, the implementation of how it is streamed to the client is a bit cumbersome, currently the client asks for the entire grid information every request. I believe the best solution to this problem would be to implement the actual game on the client-side, and then simply hash the snake game source code and send it to the server every half a minute or so, the server would then verify the hash and if there was a difference, the score would not be submitted when the player finished playing. This would drastically reduce the load on the server, and make the game much smoother to play.

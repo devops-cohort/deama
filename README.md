@@ -31,6 +31,8 @@ The Use case and the functionality of the original project idea is essentially c
 Now there are simply two tables with Account details filling the void of what Player table was doing previously.  
 Account details has a one-to-many relationship with Scores table.
 
+## Had to switch to websocket for game connection
+
 # Testing
 Testing was done using pytest and a coverage has also been supplied. Look at *References* for the link to the coverage.  
 <br>
